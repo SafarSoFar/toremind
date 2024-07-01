@@ -4,11 +4,11 @@ fn main() -> Result<(), Error>{
 
     let mut args : LinkedList<String> = env::args().collect();
 
-    map_args(&mut args);
-    Notification::new()
-    .summary("Break time")
-    .body("it's time ")
-    .show()?;
+    let args_map = map_args(&mut args);
+    let mut notification = Notification::new();
+    notification.summary(args_map.get("summary").unwrap());
+    notification.body(args_map.get("body").unwrap());
+    notification.show()?;
 
     Ok(())
 }
@@ -24,8 +24,8 @@ fn map_args(args : &mut LinkedList<String>) -> HashMap<String,String>{
             "-m" => {
                 hs.insert("every * minutes".to_string(), args.pop_front().expect("Error: no -m flag value"));
             },
-            "-t" => {
-                hs.insert("title".to_string(), args.pop_front().expect("Error: no -t flag value"));
+            "-s" => {
+                hs.insert("summary".to_string(), args.pop_front().expect("Error: no -s flag value"));
             }
             "-b" =>{
                 hs.insert("body".to_string(), args.pop_front().expect("Error: no -b flag value"));
